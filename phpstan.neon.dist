@@ -1,0 +1,11 @@
+parameters:
+    level: 6
+    phpVersion: 80100
+    paths:
+        - src
+    # kalenda.php defines the plugin constants (KALENDA_FILE, KALENDA_PATH, …)
+    # referenced from src/; scanning it lets PHPStan resolve them.
+    scanFiles:
+        - kalenda.php
+    # WordPress core stubs are provided by szepeviktor/phpstan-wordpress,
+    # auto-registered via phpstan/extension-installer.

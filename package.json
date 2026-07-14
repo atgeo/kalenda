@@ -1,0 +1,45 @@
+{
+	"name": "kalenda",
+	"version": "0.1.0",
+	"description": "Displays the Catholic liturgical calendar on any WordPress theme, powered by the LitCal API.",
+	"author": "Georges Kmeid",
+	"license": "GPL-2.0-or-later",
+	"private": true,
+	"keywords": [
+		"wordpress",
+		"gutenberg",
+		"block",
+		"liturgical-calendar",
+		"catholic"
+	],
+	"homepage": "https://github.com/atgeo/kalenda",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/atgeo/kalenda.git"
+	},
+	"engines": {
+		"node": ">=20",
+		"npm": ">=10"
+	},
+	"scripts": {
+		"build": "wp-scripts build --webpack-src-dir=blocks",
+		"start": "wp-scripts start --webpack-src-dir=blocks",
+		"format": "wp-scripts format ./blocks",
+		"lint:js": "wp-scripts lint-js ./blocks",
+		"lint:css": "wp-scripts lint-style \"./blocks/**/*.scss\"",
+		"lint:pkg-json": "wp-scripts lint-pkg-json",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip",
+		"makepot": "wp-scripts i18n make-pot . languages/kalenda.pot",
+		"env": "wp-env",
+		"env:start": "wp-env start",
+		"env:stop": "wp-env stop"
+	},
+	"devDependencies": {
+		"@wordpress/env": "^11.10.0",
+		"@wordpress/scripts": "^32.6.0"
+	},
+	"dependencies": {
+		"@wordpress/interactivity": "^6.50.0"
+	}
+}

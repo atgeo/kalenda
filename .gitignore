@@ -1,0 +1,17 @@
+# Dependencies (installed via Composer / npm, or generated in CI for releases)
+/vendor/
+/node_modules/
+
+# Build artifacts
+/build/
+
+# Tooling caches
+.phpunit.result.cache
+.phpcs.cache
+*.log
+
+# Editor / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

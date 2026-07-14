@@ -1,0 +1,68 @@
+{
+    "name": "atgeo/kalenda",
+    "description": "A modern WordPress plugin that displays the Catholic liturgical calendar, powered by the LitCal API.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "keywords": [
+        "wordpress",
+        "wordpress-plugin",
+        "catholic",
+        "liturgical-calendar",
+        "litcal",
+        "gutenberg"
+    ],
+    "authors": [
+        {
+            "name": "Georges Kmeid",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/atgeo/kalenda/issues",
+        "source": "https://github.com/atgeo/kalenda"
+    },
+    "require": {
+        "php": ">=8.1",
+        "ext-json": "*",
+        "liturgical-calendar/components": "^3.3"
+    },
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^3.3",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.2",
+        "phpstan/phpstan": "^2.2",
+        "phpstan/extension-installer": "^1.4",
+        "szepeviktor/phpstan-wordpress": "^2.0",
+        "brain/monkey": "^2.7",
+        "yoast/phpunit-polyfills": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kalenda\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kalenda\\Tests\\": "tests/phpunit/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "scripts": {
+        "phpcs": "phpcs",
+        "phpcbf": "phpcbf",
+        "phpstan": "phpstan analyse --memory-limit=512M",
+        "test": "phpunit"
+    },
+    "scripts-descriptions": {
+        "phpcs": "Check code against the WordPress Coding Standards.",
+        "phpcbf": "Automatically fix WordPress Coding Standards violations.",
+        "phpstan": "Run static analysis over the plugin source.",
+        "test": "Run the PHPUnit test suite."
+    }
+}

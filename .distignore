@@ -1,0 +1,23 @@
+# Files and directories excluded from the distributed (WordPress.org) build.
+# Everything NOT listed here ships — notably vendor/, build/, languages/,
+# src/, kalenda.php, uninstall.php, readme.txt and LICENSE.
+
+/.git
+/.github
+/.wordpress-org
+/node_modules
+/tests
+/blocks
+
+/.gitignore
+/.distignore
+/.editorconfig
+/.wp-env.json
+/phpcs.xml.dist
+/phpstan.neon.dist
+/phpunit.xml.dist
+/composer.json
+/composer.lock
+/package.json
+/package-lock.json
+/README.md

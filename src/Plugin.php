@@ -9,7 +9,11 @@ declare( strict_types=1 );
 
 namespace Kalenda;
 
+use Kalenda\Api\LitCalClient;
 use Kalenda\Contracts\Registrable;
+use Kalenda\Rest\CalendarController;
+use Kalenda\Rest\RestRegistrar;
+use Kalenda\Support\Options;
 
 /**
  * Central plugin container.
@@ -88,12 +92,21 @@ final class Plugin {
 	 * @return Registrable[]
 	 */
 	private function services(): array {
+		$options = Options::load();
+		$gateway = LitCalClient::create( $options );
+
+		$services = array(
+			new RestRegistrar(
+				new CalendarController( $gateway, $options )
+			),
+		);
+
 		/**
 		 * Filter the services registered during boot.
 		 *
 		 * @param Registrable[] $services List of registrable services.
 		 */
-		$services = (array) apply_filters( 'kalenda_services', array() );
+		$services = (array) apply_filters( 'kalenda_services', $services );
 
 		// A third-party filter callback may return non-conforming values, so the
 		// instanceof guard is genuinely needed even though the docblock claims otherwise.

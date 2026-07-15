@@ -1,0 +1,28 @@
+{
+  "apiVersion": 3,
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "name": "kalenda/day",
+  "title": "Kalenda Day",
+  "description": "Displays a single day from Kalenda.",
+  "category": "widgets",
+  "textdomain": "kalenda",
+  "editorScript": "file:./index.js",
+  "attributes": {
+    "type": {
+      "type": "string",
+      "default": "general"
+    },
+    "calendarId": {
+      "type": "string",
+      "default": ""
+    },
+    "locale": {
+      "type": "string",
+      "default": "en"
+    },
+    "date": {
+      "type": "string",
+      "default": ""
+    }
+  }
+}

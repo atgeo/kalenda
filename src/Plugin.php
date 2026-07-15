@@ -10,6 +10,7 @@ declare( strict_types=1 );
 namespace Kalenda;
 
 use Kalenda\Api\LitCalClient;
+use Kalenda\Blocks\BlockRegistrar;
 use Kalenda\Contracts\Registrable;
 use Kalenda\Rest\CalendarController;
 use Kalenda\Rest\MetadataController;
@@ -101,6 +102,7 @@ final class Plugin {
 				new MetadataController( $gateway ),
 				new CalendarController( $gateway, $options )
 			),
+			new BlockRegistrar(),
 		);
 
 		/**

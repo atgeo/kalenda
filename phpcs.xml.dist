@@ -57,4 +57,15 @@
 			</property>
 		</properties>
 	</rule>
+
+	<!--
+		The gateway/domain layer throws exceptions purely as developer
+		diagnostics. Every one is caught at the REST boundary and converted into
+		a WP_Error response, so exception messages are never echoed as HTML.
+		Escaping them would couple the WP-agnostic domain objects to esc_html(),
+		so the "exception not escaped" sniff is disabled for src/ only.
+	-->
+	<rule ref="WordPress.Security.EscapeOutput.ExceptionNotEscaped">
+		<exclude-pattern>/src/*</exclude-pattern>
+	</rule>
 </ruleset>

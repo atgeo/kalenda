@@ -8,17 +8,17 @@ Stable tag: 0.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Display the Catholic liturgical calendar on any WordPress theme, powered by the LitCal API.
+Display the Catholic liturgical calendar on WordPress themes using a native block, powered by the LitCal API.
 
 == Description ==
 
-Kalenda brings the Catholic liturgical calendar to WordPress. It uses the open **LitCal API** to show liturgical celebrations, their rank, liturgical colour and season — for the General Roman Calendar as well as national and diocesan calendars, in multiple languages.
+Kalenda brings the Catholic liturgical calendar to WordPress. It uses the open LitCal API to show liturgical celebrations, their rank and liturgical colour — for the General Roman Calendar as well as national and diocesan calendars, in the locales each supports.
 
 Kalenda is built for modern WordPress:
 
-* **Blocks that work with any theme** — a liturgical calendar block and a "liturgical day" block, server-rendered for speed and SEO and made interactive with the WordPress Interactivity API.
-* **A cached REST API** (`kalenda/v1`) so your own themes and plugins can read liturgical data without calling the upstream service directly.
-* **Clean, standards-based code** — PSR-4 autoloading, the WordPress Coding Standards and static analysis.
+* A Kalenda Day block — shows today's liturgical celebration(s), server-rendered for compatibility and fast page output so it works with any theme. (A month/grid calendar block is not available yet.)
+* A cached REST API (`kalenda/v1`) so your own themes and plugins can read liturgical data without calling the upstream service directly.
+* Clean, standards-based code — PSR-4 autoloading, the WordPress Coding Standards, and static analysis.
 
 Liturgical data is provided by the [LitCal project](https://litcal.johnromanodorazio.com/) by John Romano D'Orazio.
 
@@ -26,7 +26,7 @@ Liturgical data is provided by the [LitCal project](https://litcal.johnromanodor
 
 1. Upload the `kalenda` folder to `/wp-content/plugins/`, or install it from the Plugins screen.
 2. Activate the plugin through the **Plugins** menu in WordPress.
-3. Add a **Kalenda** block to any post or page, or configure defaults under **Settings → Kalenda**.
+3. Add the **Kalenda Day** block to any post or page from the block inserter, then set the calendar, language, and heading from the block's settings panel in the editor. There is no separate admin settings screen yet.
 
 == External Services ==
 
@@ -36,7 +36,7 @@ When data is requested, the plugin sends:
 * The requested liturgical year.
 * The requested year type.
 * The requested locale.
-* The requested calendar identifier (for national or diocesan calendars, when applicable).
+* The requested calendar identifier, when supported by the plugin configuration.
 
 No personal information, user accounts, or site content is transmitted.
 
@@ -56,13 +56,16 @@ No. Kalenda talks to the public LitCal API. Responses are cached in WordPress so
 
 = Which calendars are supported? =
 
-The General Roman Calendar plus every national and diocesan calendar published by the LitCal project, in the locales they provide.
+The General Roman Calendar is supported.
+
+Additional national and diocesan calendars from the LitCal project may be supported in future versions.
 
 = Does it work with my theme? =
 
-Yes. Blocks are server-rendered with theme-agnostic markup and liturgical colours exposed as CSS custom properties, so any block or classic theme can style them.
+Yes. The block is server-rendered with plain, theme-agnostic markup, so it works in block and classic themes alike. Liturgical colours currently ship as fixed CSS classes rather than theme-overridable custom properties.
 
 == Changelog ==
 
 = 0.1.0 =
-* Initial development release: project scaffolding, architecture and tooling.
+* REST API (`kalenda/v1`): `/calendar`, `/day` and `/calendars`, with metadata-based validation and cached, rate-limit-friendly responses.
+* Kalenda Day block: shows today's celebration(s), server-rendered.

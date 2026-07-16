@@ -4,7 +4,7 @@
   "name": "kalenda/day",
   "title": "Kalenda Day",
   "description": "Displays a single day from Kalenda.",
-  "category": "widgets",
+  "category": "kalenda",
   "textdomain": "kalenda",
   "editorScript": "file:./index.js",
   "attributes": {

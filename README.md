@@ -2,32 +2,33 @@
 
 A modern WordPress plugin that displays the **Catholic liturgical calendar** on any theme, powered by the [LitCal API](https://litcal.johnromanodorazio.com/).
 
-> ⚠️ **Status:** early development (`0.1.0`). The public API and blocks are not yet stable.
+> ⚠️ **Status:** early development (`0.1.0`). The REST API and the shipped block work, but the public contract isn't stable yet, and there is no admin settings screen.
 
-## Features (planned)
+## Features
 
-- 📅 **Liturgical calendar block** — month grid or agenda/list view for any liturgical year.
-- 🕯️ **Liturgical day block** — today's celebration, rank, liturgical colour and season.
-- 🌍 **Any calendar** — General Roman, national and diocesan calendars, in multiple locales.
-- ⚡ **Fast & theme-agnostic** — server-rendered with the WordPress Interactivity API, cached via transients.
-- 🔌 **REST API** — a cached `kalenda/v1` namespace your own code can consume.
+- 🕯️ **Kalenda Day block** — today's celebration(s): name, rank and liturgical colour. Fully server-rendered (`render.php`), so it works with any theme. (A month/grid calendar block is not built yet.)
+- 🌍 **Any calendar** — General Roman, national and diocesan calendars, validated against LitCal's live metadata (which ids and locales currently exist).
+- 🔌 **REST API** — a cached `kalenda/v1` namespace (`/calendar`, `/day`, `/calendars`); the browser never calls LitCal directly.
+- ⚡ **Cached** — WordPress transients, tiered by year (immutable past years cached hard, current/future years shorter).
 
 ## Architecture
 
 Kalenda is a thin, well-isolated WordPress layer over the official
 [`liturgical-calendar/components`](https://packagist.org/packages/liturgical-calendar/components) library.
 
-- **`Kalenda\Contracts\LitCalGateway`** — the only interface the plugin talks to for calendar data.
-- **`Kalenda\Api\LitCalClient`** — implements the gateway over the components library's `ApiClient`.
-- WordPress adapters supply the library's PSR-18 HTTP client (the WP HTTP API) and PSR-16 cache (transients).
-- **`kalenda/v1` REST endpoints** proxy and cache LitCal; blocks and third parties call these, never LitCal directly.
-- **Blocks** are registered from `block.json`, server-rendered in `render.php`, and made interactive on the front end with the WordPress Interactivity API.
+- **`Kalenda\Contracts\LitCalGateway`** — the only interface anything talks to for calendar data.
+- **`Kalenda\Api\LitCalClient`** — implements the gateway over the components library's `ApiClient`, with WordPress adapters for HTTP (`WpHttpClient`, over `wp_remote_request`) and caching (`TransientCache`, over WP transients).
+- **`Kalenda\Repositories\CalendarRepository`** — validates a query against LitCal's live metadata allowlist, then fetches through the gateway, mapping an unavailable upstream to a REST-friendly error. Shared by the REST controller and the block's `render.php` (via the `kalenda()` helper).
+- **`Kalenda\Services\DayService`** — filters a year's events down to a single day; shared the same way.
+- **`kalenda/v1` REST endpoints** (`Kalenda\Rest\*`) proxy and cache LitCal for the block and for third parties.
+- **Blocks** are dynamic/server-rendered (`render.php` + `block.json`), with an editor preview via `ServerSideRender`. There is no front-end JavaScript interactivity yet.
 
 ```
-kalenda.php          Bootstrap: guards, autoload, boot
-src/                 PSR-4 (Kalenda\) — gateway, REST, admin, blocks glue
+kalenda.php          Bootstrap: guards, autoload, boot; defines the kalenda() helper
+src/                 PSR-4 (Kalenda\) — gateway, repositories/services, REST, blocks glue
 blocks/              Block sources (built into build/ by @wordpress/scripts)
 build/               Compiled block assets
+assets/              Plugin icon assets
 languages/           Translations
 tests/               PHPUnit tests
 ```

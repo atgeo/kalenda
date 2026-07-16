@@ -11,7 +11,9 @@ namespace Kalenda;
 
 use Kalenda\Api\LitCalClient;
 use Kalenda\Blocks\BlockRegistrar;
+use Kalenda\Contracts\LitCalGateway;
 use Kalenda\Contracts\Registrable;
+use Kalenda\Repositories\CalendarRepository;
 use Kalenda\Rest\CalendarController;
 use Kalenda\Rest\MetadataController;
 use Kalenda\Rest\RestRegistrar;
@@ -40,6 +42,20 @@ final class Plugin {
 	 * @var bool
 	 */
 	private bool $booted = false;
+
+	/**
+	 * Shared calendar repository.
+	 *
+	 * @var CalendarRepository|null
+	 */
+	private ?CalendarRepository $calendar_repository = null;
+
+	/**
+	 * Shared day service.
+	 *
+	 * @var DayService|null
+	 */
+	private ?DayService $day_service = null;
 
 	/**
 	 * Retrieve the shared plugin instance.
@@ -86,6 +102,41 @@ final class Plugin {
 	}
 
 	/**
+	 * Retrieve the shared calendar repository.
+	 */
+	public function calendar_repository(): CalendarRepository {
+		if ( null === $this->calendar_repository ) {
+			$options = Options::load();
+
+			$this->calendar_repository = new CalendarRepository(
+				LitCalClient::create( $options )
+			);
+		}
+
+		return $this->calendar_repository;
+	}
+
+	/**
+	 * Retrieve the shared day service.
+	 */
+	public function day_service(): DayService {
+		if ( null === $this->day_service ) {
+			$this->day_service = new DayService();
+		}
+
+		return $this->day_service;
+	}
+
+	/**
+	 * Retrieve the shared LitCal gateway.
+	 *
+	 * @return LitCalGateway
+	 */
+	public function gateway(): LitCalGateway {
+		return LitCalClient::create( Options::load() );
+	}
+
+	/**
 	 * Build the list of services to register.
 	 *
 	 * Later phases append their services here (REST controller, settings page,
@@ -95,14 +146,16 @@ final class Plugin {
 	 * @return Registrable[]
 	 */
 	private function services(): array {
-		$options     = Options::load();
-		$gateway     = LitCalClient::create( $options );
-		$day_service = new DayService();
+		$options = Options::load();
 
 		$services = array(
 			new RestRegistrar(
-				new MetadataController( $gateway ),
-				new CalendarController( $gateway, $options, $day_service )
+				new MetadataController( $this->gateway() ),
+				new CalendarController(
+					$this->calendar_repository(),
+					$options,
+					$this->day_service()
+				)
 			),
 			new BlockRegistrar(),
 		);

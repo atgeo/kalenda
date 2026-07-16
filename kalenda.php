@@ -42,6 +42,15 @@ define( 'Kalenda\\KALENDA_FILE', __FILE__ );
 define( 'Kalenda\\KALENDA_PATH', plugin_dir_path( __FILE__ ) );
 define( 'Kalenda\\KALENDA_URL', plugin_dir_url( __FILE__ ) );
 
+if ( ! function_exists( 'kalenda' ) ) {
+	/**
+	 * Retrieve the Kalenda plugin instance.
+	 */
+	function kalenda(): Plugin {
+		return Plugin::instance();
+	}
+}
+
 /**
  * Render a dismissible admin notice describing why the plugin could not boot.
  *
@@ -113,6 +122,6 @@ require_once KALENDA_PATH . 'vendor/autoload.php';
 add_action(
 	'plugins_loaded',
 	static function (): void {
-		Plugin::instance()->boot();
+		kalenda()->boot();
 	}
 );

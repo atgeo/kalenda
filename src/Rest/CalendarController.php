@@ -13,9 +13,8 @@ use DateTimeImmutable;
 use Exception as DateParseException;
 use InvalidArgumentException;
 use Kalenda\Api\CalendarQuery;
-use Kalenda\Contracts\LitCalGateway;
 use Kalenda\Contracts\RouteProvider;
-use Kalenda\Exceptions\GatewayException;
+use Kalenda\Repositories\CalendarRepository;
 use Kalenda\Services\DayService;
 use Kalenda\Support\Options;
 use WP_Error;
@@ -36,12 +35,12 @@ final class CalendarController implements RouteProvider {
 	/**
 	 * Wire the endpoint's collaborators.
 	 *
-	 * @param LitCalGateway $gateway Calendar data source.
-	 * @param Options       $options Plugin defaults for unspecified arguments.
-	 * @param DayService    $day_service Service for filtering calendar events by day.
+	 * @param CalendarRepository $repository Calendar repository.
+	 * @param Options            $options Plugin defaults for unspecified arguments.
+	 * @param DayService         $day_service Service for filtering calendar events by day.
 	 */
 	public function __construct(
-		private readonly LitCalGateway $gateway,
+		private readonly CalendarRepository $repository,
 		private readonly Options $options,
 		private readonly DayService $day_service
 	) {}
@@ -178,7 +177,7 @@ final class CalendarController implements RouteProvider {
 			return $this->invalid_param_error( $e->getMessage() );
 		}
 
-		$data = $this->fetch( $query );
+		$data = $this->repository->fetch( $query );
 
 		return $data instanceof WP_Error
 			? $data
@@ -216,7 +215,7 @@ final class CalendarController implements RouteProvider {
 			return $this->invalid_param_error( $e->getMessage() );
 		}
 
-		$data = $this->fetch( $query );
+		$data = $this->repository->fetch( $query );
 		if ( $data instanceof WP_Error ) {
 			return $data;
 		}
@@ -224,73 +223,6 @@ final class CalendarController implements RouteProvider {
 		$data['litcal'] = $this->day_service->filter( (array) ( $data['litcal'] ?? array() ), $date );
 
 		return $this->cached_response( $data, $this->day_max_age( $date ) );
-	}
-
-	/**
-	 * Run a validated query through the allowlist and the gateway.
-	 *
-	 * Shared by both routes: performs the metadata allowlist check, then fetches
-	 * (and caches, in the gateway) the calendar, translating an unavailable
-	 * upstream into a 502.
-	 *
-	 * @param CalendarQuery $query The query to run.
-	 * @return array<string,mixed>|WP_Error Gateway data, or an error response.
-	 */
-	private function fetch( CalendarQuery $query ): array|WP_Error {
-		$allowlist_error = $this->check_allowlist( $query );
-		if ( null !== $allowlist_error ) {
-			return $allowlist_error;
-		}
-
-		try {
-			return $this->gateway->calendar( $query );
-		} catch ( GatewayException $e ) {
-			return $this->upstream_error();
-		}
-	}
-
-	/**
-	 * Validate a query's calendar id and locale against the live metadata
-	 * allowlist. Checked separately from {@see CalendarQuery}'s own structural
-	 * validation because membership requires a network round trip the value
-	 * object has no business making.
-	 *
-	 * @param CalendarQuery $query The query to check.
-	 * @return WP_Error|null A 400 error when invalid, null when allowed
-	 *                       (including when the allowlist itself is unavailable —
-	 *                       we degrade gracefully rather than block on it).
-	 */
-	private function check_allowlist( CalendarQuery $query ): ?WP_Error {
-		try {
-			$allowlist = new MetadataAllowlist( $this->gateway->metadata() );
-		} catch ( GatewayException $e ) {
-			return null;
-		}
-
-		if ( CalendarQuery::TYPE_GENERAL !== $query->type
-			&& ! $allowlist->is_valid_calendar_id( $query->type, (string) $query->calendar_id )
-		) {
-			return $this->invalid_param_error(
-				sprintf(
-				/* translators: 1: calendar type (nation or diocese), 2: requested id. */
-					__( 'Unknown %1$s calendar: %2$s.', 'kalenda' ),
-					$query->type,
-					(string) $query->calendar_id
-				)
-			);
-		}
-
-		if ( ! $allowlist->is_valid_locale( $query->type, $query->calendar_id, $query->locale ) ) {
-			return $this->invalid_param_error(
-				sprintf(
-				/* translators: %s: the unsupported locale code. */
-					__( 'Unsupported locale for this calendar: %s', 'kalenda' ),
-					$query->locale
-				)
-			);
-		}
-
-		return null;
 	}
 
 	/**
@@ -376,20 +308,5 @@ final class CalendarController implements RouteProvider {
 	 */
 	private function invalid_param_error( string $message ): WP_Error {
 		return new WP_Error( 'rest_invalid_param', $message, array( 'status' => 400 ) );
-	}
-
-	/**
-	 * A 502 error for an unavailable upstream. Never includes the caught
-	 * exception's own message — it may embed transport details not meant for
-	 * API consumers.
-	 *
-	 * @return WP_Error
-	 */
-	private function upstream_error(): WP_Error {
-		return new WP_Error(
-			'kalenda_upstream_unavailable',
-			__( 'The liturgical calendar service is currently unavailable. Please try again later.', 'kalenda' ),
-			array( 'status' => 502 )
-		);
 	}
 }

@@ -11,7 +11,9 @@ namespace Kalenda\Tests\Rest;
 
 use Brain\Monkey\Functions;
 use Kalenda\Exceptions\GatewayException;
+use Kalenda\Repositories\CalendarRepository;
 use Kalenda\Rest\CalendarController;
+use Kalenda\Services\DayService;
 use Kalenda\Support\Options;
 use Kalenda\Tests\Fakes\FakeLitCalGateway;
 use Kalenda\Tests\TestCase;
@@ -32,7 +34,11 @@ final class CalendarControllerTest extends TestCase {
 			metadata: array( 'national_calendars_keys' => array( 'US', 'IT' ) )
 		);
 
-		$controller = new CalendarController( $gateway, Options::from_array( array() ) );
+		$controller = new CalendarController(
+			new CalendarRepository( $gateway ),
+			Options::from_array( array() ),
+			new DayService()
+		);
 
 		$response = $controller->get_calendar(
 			new WP_REST_Request(
@@ -65,7 +71,11 @@ final class CalendarControllerTest extends TestCase {
 				}
 			);
 
-		$controller = new CalendarController( new FakeLitCalGateway(), Options::from_array( array() ) );
+		$controller = new CalendarController(
+			new CalendarRepository( new FakeLitCalGateway() ),
+			Options::from_array( array() ),
+			new DayService()
+		);
 		$controller->register_routes();
 
 		self::assertArrayHasKey( '/day', $captured );
@@ -86,7 +96,11 @@ final class CalendarControllerTest extends TestCase {
 			calendar_exception: new GatewayException( 'boom: upstream connection refused' )
 		);
 
-		$controller = new CalendarController( $gateway, Options::from_array( array() ) );
+		$controller = new CalendarController(
+			new CalendarRepository( $gateway ),
+			Options::from_array( array() ),
+			new DayService()
+		);
 
 		$response = $controller->get_calendar(
 			new WP_REST_Request(

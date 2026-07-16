@@ -25,6 +25,14 @@
     "date": {
       "type": "string",
       "default": ""
+    },
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "showDate": {
+      "type": "boolean",
+      "default": true
     }
   }
 }

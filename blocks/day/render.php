@@ -35,17 +35,23 @@ $events = $day_service->filter(
         $date
 );
 
-// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- $date is already a DateTimeImmutable in wp_timezone(); wp_date() with a timestamp still honours the site's configured date_format and locale.
 $today_label = wp_date( get_option( 'date_format' ), $date->getTimestamp() );
 ?>
-<div <?php echo get_block_wrapper_attributes(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() returns pre-escaped markup. ?>>
+<div <?php echo get_block_wrapper_attributes(); ?>>
     <h2 class="kalenda-day__title">
         <?php
-        printf(
-        /* translators: %s: today's date, formatted per the site's Settings > General date format. */
-                esc_html__( "Today's Celebrations — %s", 'kalenda' ),
-                esc_html( $today_label )
-        );
+        $title = trim( $attributes['title'] ?? '' );
+        $show_date = $attributes['showDate'] ?? true;
+
+        if ( '' === $title ) {
+            $title = __( "Today's Celebrations", 'kalenda' );
+        }
+
+        echo esc_html( $title );
+
+        if ( $show_date ) {
+            echo ' — ' . esc_html( $today_label );
+        }
         ?>
     </h2>
 

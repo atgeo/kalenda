@@ -16,6 +16,7 @@ use Kalenda\Api\CalendarQuery;
 use Kalenda\Contracts\LitCalGateway;
 use Kalenda\Contracts\RouteProvider;
 use Kalenda\Exceptions\GatewayException;
+use Kalenda\Services\DayService;
 use Kalenda\Support\Options;
 use WP_Error;
 use WP_REST_Request;
@@ -37,10 +38,12 @@ final class CalendarController implements RouteProvider {
 	 *
 	 * @param LitCalGateway $gateway Calendar data source.
 	 * @param Options       $options Plugin defaults for unspecified arguments.
+	 * @param DayService    $day_service Service for filtering calendar events by day.
 	 */
 	public function __construct(
 		private readonly LitCalGateway $gateway,
-		private readonly Options $options
+		private readonly Options $options,
+		private readonly DayService $day_service
 	) {}
 
 	/**
@@ -218,7 +221,7 @@ final class CalendarController implements RouteProvider {
 			return $data;
 		}
 
-		$data['litcal'] = $this->events_on( (array) ( $data['litcal'] ?? array() ), $date->format( 'Y-m-d' ) );
+		$data['litcal'] = $this->day_service->filter( (array) ( $data['litcal'] ?? array() ), $date );
 
 		return $this->cached_response( $data, $this->day_max_age( $date ) );
 	}
@@ -310,30 +313,6 @@ final class CalendarController implements RouteProvider {
 		}
 
 		return new DateTimeImmutable( (string) $request['date'], wp_timezone() );
-	}
-
-	/**
-	 * Every event in a `litcal` array falling on a given date.
-	 *
-	 * A single date can carry more than one entry (a vigil Mass and the next
-	 * day's feast, optional memorials, etc.), so this returns all matches
-	 * rather than the first.
-	 *
-	 * @param array<int,mixed> $events Full year's events, as returned by the gateway.
-	 * @param string           $date   The `Y-m-d` date to keep.
-	 * @return array<int,mixed>
-	 */
-	private function events_on( array $events, string $date ): array {
-		return array_values(
-			array_filter(
-				$events,
-				static function ( mixed $event ) use ( $date ): bool {
-					$event_date = is_array( $event ) ? ( $event['date'] ?? null ) : null;
-
-					return is_string( $event_date ) && str_starts_with( $event_date, $date );
-				}
-			)
-		);
 	}
 
 	/**

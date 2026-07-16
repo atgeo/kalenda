@@ -15,6 +15,7 @@ use Kalenda\Contracts\Registrable;
 use Kalenda\Rest\CalendarController;
 use Kalenda\Rest\MetadataController;
 use Kalenda\Rest\RestRegistrar;
+use Kalenda\Services\DayService;
 use Kalenda\Support\Options;
 
 /**
@@ -94,13 +95,14 @@ final class Plugin {
 	 * @return Registrable[]
 	 */
 	private function services(): array {
-		$options = Options::load();
-		$gateway = LitCalClient::create( $options );
+		$options     = Options::load();
+		$gateway     = LitCalClient::create( $options );
+		$day_service = new DayService();
 
 		$services = array(
 			new RestRegistrar(
 				new MetadataController( $gateway ),
-				new CalendarController( $gateway, $options )
+				new CalendarController( $gateway, $options, $day_service )
 			),
 			new BlockRegistrar(),
 		);

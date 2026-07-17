@@ -34,9 +34,9 @@ jobs:
         run: composer run test
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 26
+          node-version: 22
           cache: 'npm'
 
       - name: Install npm dependencies

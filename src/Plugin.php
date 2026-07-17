@@ -83,22 +83,9 @@ final class Plugin {
 
 		$this->booted = true;
 
-		add_action( 'init', array( $this, 'load_textdomain' ) );
-
 		foreach ( $this->services() as $service ) {
 			$service->register();
 		}
-	}
-
-	/**
-	 * Load the plugin text domain for translations.
-	 */
-	public function load_textdomain(): void {
-		load_plugin_textdomain(
-			'kalenda',
-			false,
-			dirname( plugin_basename( KALENDA_FILE ) ) . '/languages'
-		);
 	}
 
 	/**

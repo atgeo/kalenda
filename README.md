@@ -2,6 +2,8 @@
 
 A modern WordPress plugin that displays the **Catholic liturgical calendar** on any theme, powered by the [LitCal API](https://litcal.johnromanodorazio.com/).
 
+![Kalenda Day block](.github/images/kalenda-day-frontend.png)
+
 > ⚠️ **Status:** early development (`0.1.0`). The REST API and the shipped block work, but the public contract isn't stable yet.
 
 ## Features

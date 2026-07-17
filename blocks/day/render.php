@@ -53,7 +53,7 @@ $kalenda_events = $kalenda_day_service->filter( (array) ( $kalenda_data['litcal'
 
 $kalenda_today_label = wp_date( get_option( 'date_format' ), $kalenda_date->getTimestamp() );
 
-$kalenda_title     = trim( (string) ( $attributes['title'] ?? '' ) );
+$kalenda_title = sanitize_text_field( (string) ( $attributes['title'] ?? '' ) );
 $kalenda_show_date = (bool) ( $attributes['showDate'] ?? true );
 
 if ( '' === $kalenda_title ) {

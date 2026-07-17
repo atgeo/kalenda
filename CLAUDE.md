@@ -146,9 +146,14 @@ Code follows **WordPress Coding Standards** (see `phpcs.xml.dist`), which overri
 - `WordPress.Security.EscapeOutput.ExceptionNotEscaped` excluded for `/src/*` in `phpcs.xml.dist` —
   gateway exceptions are internal diagnostics, caught and converted to `WP_Error` at the REST boundary,
   never echoed. Do **not** add `esc_html()` to domain-layer exception messages.
-- `// phpcs:ignoreFile` at the top of `blocks/day/render.php` — a **whole-file** suppression, broader
-  than the itemized policy above. It is currently masking a real bug (see Pitfalls) — if you touch
-  this file, replace the blanket ignore with targeted ones rather than leaving it as-is.
+- `WordPress.NamingConventions.PrefixAllGlobals` and `WordPress.WP.GlobalVariablesOverride` excluded
+  for `/blocks/C*/render\.php` in `phpcs.xml.dist` — these templates have no namespace and assign
+  top-level variables by design, but WP core always `include`s them from inside
+  `WP_Block_Type::render()`'s method scope, so the variables are locals, not real globals. Applies to
+  every future block's `render.php` too, not just `blocks/day/`.
+- `// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped` on the `get_block_wrapper_attributes()`
+  line in `blocks/day/render.php` — that core function's return value is already safe HTML attributes;
+  this is the standard, well-known false positive for it.
 
 ## Commands
 

@@ -43,7 +43,7 @@ jobs:
       - name: Build blocks
         run: npm run build
 
-      - name: Create plugin ZIP
+      - name: Prepare plugin directory
         run: |
           # Create clean plugin directory
           mkdir -p plugin-build/kalenda
@@ -51,18 +51,13 @@ jobs:
           # Copy files while respecting .distignore
           rsync -a --exclude-from=.distignore ./ plugin-build/kalenda/
 
-          # Create zip
-          cd plugin-build
-          zip -r ../kalenda.zip kalenda
-          cd ..
+      - name: List package contents
+        run: find plugin-build/kalenda -type f | sort
 
-      - name: List ZIP contents
-        run: unzip -l kalenda.zip
-
-      - name: Upload plugin ZIP
+      - name: Upload plugin package
         uses: actions/upload-artifact@v7
         with:
           name: kalenda-plugin-${{ inputs.tag || github.ref_name }}
-          path: kalenda.zip
+          path: plugin-build/kalenda
           retention-days: 14
           if-no-files-found: error

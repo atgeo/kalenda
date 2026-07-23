@@ -1,6 +1,6 @@
 <?php
 /**
- * MyCatholicCalendar
+ * My Catholic Calendar plugin bootstrap.
  *
  * @package           MyCatholicCalendar
  * @author            Georges Kmeid
@@ -8,7 +8,7 @@
  * @license           GPL-2.0-or-later
  *
  * @wordpress-plugin
- * Plugin Name:       MyCatholicCalendar
+ * Plugin Name:       My Catholic Calendar
  * Plugin URI:        https://github.com/atgeo/my-catholic-calendar
  * Description:       Displays the Catholic liturgical calendar on any WordPress theme, powered by the LitCal API.
  * Version:           0.1.0

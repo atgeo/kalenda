@@ -1,4 +1,4 @@
-.kalenda-day--default {
+.mcc-day--default {
   padding: 1.5rem;
   border: 1px solid #e7e7e7;
   border-radius: 0.75rem;
@@ -6,34 +6,34 @@
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.03), 0 6px 18px rgb(0 0 0 / 0.04);
 }
 
-.kalenda-day__header {
+.mcc-day__header {
   margin-block-end: 1.4em;
 }
 
-.kalenda-day__title {
+.mcc-day__title {
   font-size: 1.8rem;
   font-weight: 600;
   text-transform: uppercase;
   margin-block-end: 0;
 }
 
-.kalenda-day__empty {
+.mcc-day__empty {
   color: #777;
 }
 
-.kalenda-day__events-list {
+.mcc-day__events-list {
   display: flex;
   flex-direction: column;
   gap: 0.75em;
 }
 
-.kalenda-day__events-list.kalenda-day__events-list {
+.mcc-day__events-list.mcc-day__events-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.kalenda-day__name {
+.mcc-day__name {
   display: flex;
   align-items: stretch;
   gap: 1rem;
@@ -42,42 +42,42 @@
   margin: 0;
 }
 
-.kalenda-day--default .kalenda-day__name {
+.mcc-day--default .mcc-day__name {
   margin-block-end: 0.6em;
 }
 
-.kalenda-day__name::before {
+.mcc-day__name::before {
   content: "";
   width: 0.5rem;
   height: 1.5em;
   flex-shrink: 0;
 }
 
-.kalenda-day__grade {
+.mcc-day__grade {
   text-transform: capitalize;
 }
 
-.kalenda-day__name.event-color-green::before {
+.mcc-day__name.event-color-green::before {
   background-color: #186420;
 }
 
-.kalenda-day__name.event-color-white::before {
+.mcc-day__name.event-color-white::before {
   background-color: #f3f3f3;
 }
 
-.kalenda-day__name.event-color-rose::before {
+.mcc-day__name.event-color-rose::before {
   background-color: #f485ba;
 }
 
-.kalenda-day__name.event-color-red::before {
+.mcc-day__name.event-color-red::before {
   background-color: #d80707;
 }
 
-.kalenda-day__name.event-color-purple::before {
+.mcc-day__name.event-color-purple::before {
   background-color: #800080;
 }
 
-.kalenda-day__meta {
+.mcc-day__meta {
   display: flex;
   flex-wrap: wrap;
   gap: 0.3em;
@@ -85,7 +85,7 @@
   color: #777;
 }
 
-.kalenda-day__meta-item + .kalenda-day__meta-item::before {
+.mcc-day__meta-item + .mcc-day__meta-item::before {
   content: "•";
   display: inline-block;
   font-size: 0.75em;

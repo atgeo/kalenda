@@ -12,7 +12,7 @@ namespace MyCatholicCalendar\Blocks;
 use MyCatholicCalendar\Contracts\Registrable;
 
 /**
- * Registers Kalenda's Gutenberg blocks.
+ * Registers My Catholic Calendar's Gutenberg blocks.
  */
 final class BlockRegistrar implements Registrable {
 

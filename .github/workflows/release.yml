@@ -53,18 +53,18 @@ jobs:
         run: |
           # Build outside the checked-out repo ($RUNNER_TEMP, not ./) so
           # rsync never scans the directory it's about to create into.
-          mkdir -p "$RUNNER_TEMP/plugin-build/kalenda"
-          rsync -a --exclude-from=.distignore ./ "$RUNNER_TEMP/plugin-build/kalenda/"
+          mkdir -p "$RUNNER_TEMP/plugin-build/my-catholic-calendar"
+          rsync -a --exclude-from=.distignore ./ "$RUNNER_TEMP/plugin-build/my-catholic-calendar/"
           cd "$RUNNER_TEMP/plugin-build"
-          zip -r "$GITHUB_WORKSPACE/kalenda.zip" kalenda
+          zip -r "$GITHUB_WORKSPACE/my-catholic-calendar.zip" my-catholic-calendar
 
       - name: List ZIP contents
-        run: unzip -l kalenda.zip
+        run: unzip -l my-catholic-calendar.zip
 
       - name: Upload plugin ZIP
         uses: actions/upload-artifact@v7
         with:
-          name: kalenda-plugin-${{ inputs.tag || github.ref_name }}
-          path: kalenda.zip
+          name: my-catholic-calendar-${{ inputs.tag || github.ref_name }}
+          path: my-catholic-calendar.zip
           retention-days: 14
           if-no-files-found: error

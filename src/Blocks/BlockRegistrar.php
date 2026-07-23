@@ -25,14 +25,14 @@ final class BlockRegistrar implements Registrable {
 	}
 
 	/**
-	 * Register every Kalenda block.
+	 * Register every My Catholic Calendar block.
 	 */
 	public function register_blocks(): void {
 		register_block_type( constant( 'MyCatholicCalendar\\MY_CATHOLIC_CALENDAR_PATH' ) . 'build/day' );
 	}
 
 	/**
-	 * Register the Kalenda block category.
+	 * Register the Today's Celebrations block category.
 	 *
 	 * @param array<int, array<string, mixed>> $categories Existing block categories.
 	 *

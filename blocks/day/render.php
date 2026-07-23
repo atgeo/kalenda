@@ -17,101 +17,101 @@ use function MyCatholicCalendar\my_catholic_calendar;
  *
  * @param string $message Already-translated, human-readable message.
  */
-$mcc_render_error = static function ( string $message ): void {
+$my_catholic_calendar_render_error = static function ( string $message ): void {
 	printf(
 		'<p class="kalenda-day__error">%s</p>',
 		esc_html( $message )
 	);
 };
 
-$mcc_date = current_datetime();
+$my_catholic_calendar_date = current_datetime();
 
-$mcc_repository  = my_catholic_calendar()->calendar_repository();
-$mcc_day_service = my_catholic_calendar()->day_service();
+$my_catholic_calendar_repository  = my_catholic_calendar()->calendar_repository();
+$my_catholic_calendar_day_service = my_catholic_calendar()->day_service();
 
 try {
-	$mcc_query = CalendarQuery::create(
+	$my_catholic_calendar_query = CalendarQuery::create(
 		(string) ( $attributes['type'] ?? 'general' ),
 		(string) ( $attributes['calendarId'] ?? '' ),
-		(int) $mcc_date->format( 'Y' ),
+		(int) $my_catholic_calendar_date->format( 'Y' ),
 		CalendarQuery::YEAR_CIVIL,
 		(string) ( $attributes['locale'] ?? 'en' )
 	);
 } catch ( InvalidArgumentException $e ) {
-	$mcc_render_error( __( 'This block is not configured correctly.', 'my-catholic-calendar' ) );
+    $my_catholic_calendar_render_error( __( 'This block is not configured correctly.', 'my-catholic-calendar' ) );
 	return;
 }
 
-$mcc_data = $mcc_repository->fetch( $mcc_query );
+$my_catholic_calendar_data = $my_catholic_calendar_repository->fetch( $my_catholic_calendar_query );
 
-if ( $mcc_data instanceof WP_Error ) {
-	$mcc_render_error( __( "Unable to load today's celebrations.", 'my-catholic-calendar' ) );
+if ( $my_catholic_calendar_data instanceof WP_Error ) {
+	$my_catholic_calendar_render_error( __( "Unable to load today's celebrations.", 'my-catholic-calendar' ) );
 	return;
 }
 
-$mcc_events = $mcc_day_service->filter( (array) ( $mcc_data['litcal'] ?? array() ), $mcc_date );
+$my_catholic_calendar_events = $my_catholic_calendar_day_service->filter( (array) ( $my_catholic_calendar_data['litcal'] ?? array() ), $my_catholic_calendar_date );
 
-$mcc_today_label = wp_date( get_option( 'date_format' ), $mcc_date->getTimestamp() );
+$my_catholic_calendar_today_label = wp_date( get_option( 'date_format' ), $my_catholic_calendar_date->getTimestamp() );
 
-$mcc_title     = sanitize_text_field( (string) ( $attributes['title'] ?? '' ) );
-$mcc_show_date = (bool) ( $attributes['showDate'] ?? true );
+$my_catholic_calendar_title     = sanitize_text_field( (string) ( $attributes['title'] ?? '' ) );
+$my_catholic_calendar_show_date = (bool) ( $attributes['showDate'] ?? true );
 
-if ( '' === $mcc_title ) {
-	$mcc_title = __( 'Today', 'my-catholic-calendar' );
+if ( '' === $my_catholic_calendar_title ) {
+	$my_catholic_calendar_title = __( 'Today', 'my-catholic-calendar' );
 }
 
-$mcc_style = sanitize_key( $attributes['style'] ?? 'default' );
+$my_catholic_calendar_style = sanitize_key( $attributes['style'] ?? 'default' );
 
-$mcc_allowed_styles = array(
+$my_catholic_calendar_allowed_styles = array(
 	'default',
 	'minimal',
 );
 
-if ( ! in_array( $mcc_style, $mcc_allowed_styles, true ) ) {
-	$mcc_style = 'default';
+if ( ! in_array( $my_catholic_calendar_style, $my_catholic_calendar_allowed_styles, true ) ) {
+	$my_catholic_calendar_style = 'default';
 }
 ?>
-<div <?php echo get_block_wrapper_attributes( array( 'class' => 'kalenda-day--' . $mcc_style ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core-escaped. ?>>
+<div <?php echo get_block_wrapper_attributes( array( 'class' => 'kalenda-day--' . $my_catholic_calendar_style ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core-escaped. ?>>
 	<div class="kalenda-day__header">
 	<h2 class="kalenda-day__title">
-		<?php echo esc_html( $mcc_title ); ?>
+		<?php echo esc_html( $my_catholic_calendar_title ); ?>
 	</h2>
-	<?php if ( $mcc_show_date ) : ?>
+	<?php if ( $my_catholic_calendar_show_date ) : ?>
 		<p class="kalenda-day__date">
-			<?php echo esc_html( $mcc_today_label ); ?>
+			<?php echo esc_html( $my_catholic_calendar_today_label ); ?>
 		</p>
 	<?php endif; ?>
 	</div>
 
-	<?php if ( empty( $mcc_events ) ) : ?>
+	<?php if ( empty( $my_catholic_calendar_events ) ) : ?>
 		<p class="kalenda-day__empty">
 			<?php esc_html_e( 'No celebrations found for today.', 'my-catholic-calendar' ); ?>
 		</p>
 	<?php else : ?>
 		<div class="kalenda-day__events">
 			<ul class="kalenda-day__events-list">
-				<?php foreach ( $mcc_events as $mcc_event ) : ?>
+				<?php foreach ( $my_catholic_calendar_events as $my_catholic_calendar_event ) : ?>
 					<li class="kalenda-day__event">
 						<?php
-						$mcc_meta_items = array();
+						$my_catholic_calendar_meta_items = array();
 
-						if ( ! empty( $mcc_event['grade_lcl'] ) ) {
-							$mcc_meta_items[] = (string) $mcc_event['grade_lcl'];
+						if ( ! empty( $my_catholic_calendar_event['grade_lcl'] ) ) {
+							$my_catholic_calendar_meta_items[] = (string) $my_catholic_calendar_event['grade_lcl'];
 						}
 
-						if ( ! empty( $mcc_event['liturgical_season_lcl'] ) ) {
-							$mcc_meta_items[] = (string) $mcc_event['liturgical_season_lcl'];
+						if ( ! empty( $my_catholic_calendar_event['liturgical_season_lcl'] ) ) {
+                            $my_catholic_calendar_meta_items[] = (string) $my_catholic_calendar_event['liturgical_season_lcl'];
 						}
 						?>
-						<h3 class="kalenda-day__name event-color-<?php echo esc_attr( (string) ( $mcc_event['color'][0] ?? 'white' ) ); ?>">
-							<?php echo esc_html( (string) ( $mcc_event['name'] ?? '' ) ); ?>
+						<h3 class="kalenda-day__name event-color-<?php echo esc_attr( (string) ( $my_catholic_calendar_event['color'][0] ?? 'white' ) ); ?>">
+							<?php echo esc_html( (string) ( $my_catholic_calendar_event['name'] ?? '' ) ); ?>
 						</h3>
 
-						<?php if ( 'default' === $mcc_style && ! empty( $mcc_meta_items ) ) : ?>
+						<?php if ( 'default' === $my_catholic_calendar_style && ! empty( $my_catholic_calendar_meta_items ) ) : ?>
 							<p class="kalenda-day__meta">
-								<?php foreach ( $mcc_meta_items as $mcc_meta_item ) : ?>
+								<?php foreach ( $my_catholic_calendar_meta_items as $my_catholic_calendar_meta_item ) : ?>
 								<span class="kalenda-day__meta-item">
-									<?php echo esc_html( $mcc_meta_item ); ?>
+									<?php echo esc_html( $my_catholic_calendar_meta_item ); ?>
 								</span>
 								<?php endforeach; ?>
 							</p>

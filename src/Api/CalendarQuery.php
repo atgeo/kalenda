@@ -112,7 +112,7 @@ final class CalendarQuery {
 	 * @return string
 	 */
 	public function cache_key(): string {
-		return 'mcc_cal_' . md5(
+		return 'my_catholic_calendar_' . md5(
 			implode(
 				'|',
 				array(

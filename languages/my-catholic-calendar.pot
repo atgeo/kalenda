@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-22T14:25:59+00:00\n"
+"POT-Creation-Date: 2026-07-23T01:43:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: my-catholic-calendar\n"
@@ -102,4 +102,58 @@ msgstr ""
 
 #: src/Rest/CalendarController.php:203
 msgid "The requested date could not be parsed."
+msgstr ""
+
+#: blocks/day/edit.js:13
+#: build/day/index.js:42
+#: build/day/index.js:13
+msgid "Settings"
+msgstr ""
+
+#: blocks/day/edit.js:17
+#: build/day/index.js:45
+#: build/day/index.js:17
+msgid "Language"
+msgstr ""
+
+#: blocks/day/edit.js:31
+#: build/day/index.js:67
+#: build/day/index.js:31
+msgid "Heading"
+msgstr ""
+
+#: blocks/day/edit.js:36
+#: build/day/index.js:73
+#: build/day/index.js:36
+msgid "Show date"
+msgstr ""
+
+#: blocks/day/edit.js:41
+#: build/day/index.js:79
+#: build/day/index.js:41
+msgid "Style"
+msgstr ""
+
+#: blocks/day/edit.js:44
+#: build/day/index.js:82
+#: build/day/index.js:44
+msgid "Default"
+msgstr ""
+
+#: blocks/day/edit.js:45
+#: build/day/index.js:85
+#: build/day/index.js:45
+msgid "Minimal"
+msgstr ""
+
+#: blocks/day/block.json
+#: build/day/block.json
+msgctxt "block title"
+msgid "Today's Celebrations"
+msgstr ""
+
+#: blocks/day/block.json
+#: build/day/block.json
+msgctxt "block description"
+msgid "Displays today's liturgical celebrations."
 msgstr ""

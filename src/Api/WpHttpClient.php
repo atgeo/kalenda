@@ -98,6 +98,7 @@ final class WpHttpClient implements HttpClientInterface {
 
 		if ( is_wp_error( $response ) ) {
 			throw new HttpException(
+				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Internal HTTP adapter exception, caught at gateway layer and wrapped in GatewayException.
 				sprintf( 'HTTP request to %s failed: %s', $url, $response->get_error_message() )
 			);
 		}

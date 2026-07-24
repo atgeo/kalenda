@@ -61,23 +61,27 @@ final class CalendarQuery {
 	 */
 	public static function create( string $type, ?string $calendar_id, int $year, string $year_type, string $locale ): self {
 		if ( ! in_array( $type, array( self::TYPE_GENERAL, self::TYPE_NATION, self::TYPE_DIOCESE ), true ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Validation exception for internal API contract, not rendered to end users.
 			throw new InvalidArgumentException( 'Unknown calendar type: ' . $type );
 		}
 
 		$id = ( null === $calendar_id || '' === $calendar_id ) ? null : $calendar_id;
 
 		if ( self::TYPE_GENERAL !== $type && null === $id ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Validation exception for internal API contract, not rendered to end users.
 			throw new InvalidArgumentException( 'A calendar id is required for ' . $type . ' calendars.' );
 		}
 
 		if ( $year < self::MIN_YEAR || $year > self::MAX_YEAR ) {
 			throw new InvalidArgumentException(
+				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Validation exception using internal class constants, not user input
 				sprintf( 'Year must be between %d and %d.', self::MIN_YEAR, self::MAX_YEAR )
 			);
 		}
 
 		$normalized_year_type = strtoupper( $year_type );
 		if ( ! in_array( $normalized_year_type, array( self::YEAR_LITURGICAL, self::YEAR_CIVIL ), true ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Validation exception for internal API contract, not rendered to end users
 			throw new InvalidArgumentException( 'Unknown year type: ' . $year_type );
 		}
 

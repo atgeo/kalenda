@@ -106,6 +106,7 @@ final class LitCalClient implements LitCalGateway {
 
 			$response = $request->get();
 		} catch ( Throwable $e ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Gateway exceptions are internal diagnostics, caught at REST boundary and converted to WP_Error.
 			throw new GatewayException( 'Unable to fetch liturgical calendar: ' . $e->getMessage(), 0, $e );
 		}
 
@@ -143,6 +144,7 @@ final class LitCalClient implements LitCalGateway {
 		} catch ( GatewayException $e ) {
 			throw $e;
 		} catch ( Throwable $e ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Gateway exceptions are internal diagnostics, caught at REST boundary and converted to WP_Error.
 			throw new GatewayException( 'Unable to fetch calendar metadata: ' . $e->getMessage(), 0, $e );
 		}
 

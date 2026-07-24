@@ -1,16 +1,9 @@
 name: Plugin Check
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Tag to package'
-        required: true
-        type: string
-
+  pull_request:
   push:
-    tags:
-      - 'v*'
+    branches: [ main ]
 
 jobs:
   plugin-check:
@@ -19,8 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
-        with:
-          ref: ${{ inputs.tag || github.ref_name }}
 
       - name: Run Plugin Check
         uses: wordpress/plugin-check-action@v1
